@@ -31,7 +31,7 @@ exports.modifyArticle = (req,res,next) => {
             if(article.userId != req.auth.userId) {
                 res.status(401).json({message : "Vous n'êtes pas l'auteur de l'article."})
             } else {
-                article.updateOne({_id: req.params.id},
+                Articles.updateOne({_id: req.params.id},
                 {
                 ...article,
                 article:req.body.article,
@@ -49,7 +49,7 @@ exports.deleteArticle = (req,res,next) => {
             if(article.userId != req.auth.userId) {
                 res.status(401).json({message : 'Non autorisé.'})
             } else {
-                Thing.deleteOne({_id: req.params.id})
+                Articles.deleteOne({_id: req.params.id})
                     .then(() => { res.status(200).json({message : 'Article supprimé.'})})
                     .catch(error => res.status(401).json({error}))
             }
