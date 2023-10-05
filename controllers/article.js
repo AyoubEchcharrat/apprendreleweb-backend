@@ -25,6 +25,24 @@ exports.getAllArticles = (req,res,next) => {
     .catch(error => res.status(400).json({Erreur : {error}}))
 }
 
+exports.modifyArticle = (req,res,next) => {
+    Articles.findOne({_id : req.params.id})
+        .then(article => {
+            if(article.userId != req.auth.userId) {
+                res.status(401).json({message : "Vous n'êtes pas l'auteur de l'article."})
+            } else {
+                article.updateOne({_id: req.params.id},
+                {
+                ...article,
+                article:req.body.article,
+                title:req.body.title,
+                })
+                .then(() => { res.status(200).json({message : 'Article modifié.'})})
+                .catch(error => res.status(401).json({error : "Erreur lors de la mise à jour de l'article."}))
+            }
+        })
+}
+
 exports.deleteArticle = (req,res,next) => {
     Articles.findOne({_id: req.params.id})
         .then(article => {
@@ -32,7 +50,7 @@ exports.deleteArticle = (req,res,next) => {
                 res.status(401).json({message : 'Non autorisé.'})
             } else {
                 Thing.deleteOne({_id: req.params.id})
-                    .then(() => { res.status(200).json({message : 'Objet supprimé.'})})
+                    .then(() => { res.status(200).json({message : 'Article supprimé.'})})
                     .catch(error => res.status(401).json({error}))
             }
         })
