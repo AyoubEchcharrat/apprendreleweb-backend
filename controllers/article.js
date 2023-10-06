@@ -26,21 +26,23 @@ exports.getAllArticles = (req,res,next) => {
 }
 
 exports.modifyArticle = (req,res,next) => {
+    const object = { ...req.body };
+    delete object._userId;
     Articles.findOne({_id : req.params.id})
-        .then(article => {
+        .then((article) => {
             if(article.userId != req.auth.userId) {
                 res.status(401).json({message : "Vous n'êtes pas l'auteur de l'article."})
             } else {
                 Articles.updateOne({_id: req.params.id},
                 {
-                ...article,
-                article:req.body.article,
-                title:req.body.title,
+                ...object,
+                _id: req.params.id
                 })
                 .then(() => { res.status(200).json({message : 'Article modifié.'})})
-                .catch(error => res.status(401).json({error : "Erreur lors de la mise à jour de l'article."}))
+                .catch(error => res.status(401).json({error : error}))
             }
         })
+        .catch((error) => res.status(400).json({ error }));
 }
 
 exports.deleteArticle = (req,res,next) => {
