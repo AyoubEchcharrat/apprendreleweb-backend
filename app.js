@@ -19,6 +19,11 @@ mongoose.connect(process.env.MONGODB_URI,
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
  
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store'); // Désactive la mise en cache
+  next();
+});
+
 app.use(express.json())
 
 app.use(cors());
