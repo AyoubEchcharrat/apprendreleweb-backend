@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const userRoutes = require('./routes/user')
 const articleRoutes = require('./routes/article')
+const path = require('path')
 
 const dotenv = require('dotenv');
 const dotenvExpand = require('dotenv-expand');
@@ -28,6 +29,7 @@ app.use(express.json())
 
 app.use(cors());
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/auth',userRoutes)
 app.use('/api/articles',articleRoutes)
 
