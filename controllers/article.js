@@ -28,8 +28,6 @@ exports.getAllArticles = (req,res,next) => {
 }
 
 exports.modifyArticle = (req,res,next) => {
-    console.log(req.body)
-    console.log(req.file)
     const object = req.file ? 
     { ...req.body, imageurl : `${req.protocol}://${req.get('host')}/images/${req.file.filename}`} 
     : { ...req.body };
