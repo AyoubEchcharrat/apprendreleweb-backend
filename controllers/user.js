@@ -43,3 +43,22 @@ exports.login = (req, res, next) => {
         })
         .catch(error => res.status(500).json({error}))
 }
+
+exports.checkSession = (req, res) => {
+    const token = req.headers.authorization.split(' ')[1]; // Récupérez le token depuis l'en-tête de la requête
+  
+    if (!token) {
+      return res.status(401).json({ message: 'Session expired' }); // Si aucun token n'est fourni, la session est expirée
+    }
+  
+    try {
+      jwt.verify(token, 'TOKEN_SECRET_ATTENTION');
+      res.status(200).json({ message: 'Session confirmed' }); // Token valide, la session est confirmée
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        res.status(401).json({ message: 'Session expired' }); // Token expiré, la session est expirée
+      } else {
+        res.status(401).json({ message: 'Session expired' }); // Autres erreurs, considérées comme une expiration de session
+      }
+    }
+  };
