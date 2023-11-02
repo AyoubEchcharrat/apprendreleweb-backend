@@ -1,5 +1,4 @@
 const Articles = require('../models/article')
-const fs = require('fs')
 
 exports.createArticle = (req, res, next) => {
     const article = new Articles({
@@ -7,7 +6,7 @@ exports.createArticle = (req, res, next) => {
         title: req.body.title,
         userId: req.auth.userId,
         tags: req.body.tags,
-        imageurl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        imageurl: req.body.imageurl,
         date: req.body.date
     });
     article.save() 
@@ -28,9 +27,7 @@ exports.getAllArticles = (req,res,next) => {
 }
 
 exports.modifyArticle = (req,res,next) => {
-    const object = req.file ? 
-    { ...req.body, imageurl : `${req.protocol}://${req.get('host')}/images/${req.file.filename}`} 
-    : { ...req.body };
+    const object = { ...req.body };
     delete object._userId;
     Articles.findOne({_id : req.params.id})
         .then((article) => {
@@ -55,12 +52,9 @@ exports.deleteArticle = (req,res,next) => {
             if(article.userId != req.auth.userId) {
                 res.status(401).json({message : 'Non autorisé.'})
             } else {
-                const filename = article.imageurl.split('/images/')[1]
-                fs.unlink(`images/${filename}`, () => {
                 Articles.deleteOne({_id: req.params.id})
                     .then(() => { res.status(200).json({message : 'Article supprimé.'})})
                     .catch(error => res.status(401).json({error}))
-                })
             }
         })
         .catch( (error) => res.status(501).json({error}))
