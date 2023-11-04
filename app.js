@@ -4,7 +4,7 @@ const cors = require("cors");
 
 const userRoutes = require('./routes/user')
 const articleRoutes = require('./routes/article')
-const path = require('path')
+const sitemapRoutes = require('./routes/sitemap');
 
 const dotenv = require('dotenv');
 const dotenvExpand = require('dotenv-expand');
@@ -31,5 +31,6 @@ app.use(cors());
 
 app.use('/api/auth',userRoutes)
 app.use('/api/articles',articleRoutes)
+app.use('/api/sitemap', sitemapRoutes)
 
 module.exports = app 
