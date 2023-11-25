@@ -4,6 +4,7 @@ exports.createArticle = (req, res, next) => {
     const article = new Articles({
         content: req.body.content,
         title: req.body.title,
+        introduction: req.body.introduction,
         userId: req.auth.userId,
         tags: req.body.tags,
         imageurl: req.body.imageurl,
