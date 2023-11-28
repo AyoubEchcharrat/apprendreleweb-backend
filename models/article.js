@@ -8,8 +8,7 @@ const articlesSchema = mongoose.Schema({
         type: {
             average: { type: Number, default: 0 }, 
             count: { type: Number, default: 0 }
-        },
-        required: true
+        }
     },
     tags : {type:Array, required : true},
     imageurl : { type: String, required: true },
